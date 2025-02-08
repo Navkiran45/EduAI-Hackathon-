@@ -3,6 +3,9 @@ from flask_login import login_user, logout_user, login_required
 from models.student import Student
 from app import db, login_manager
 
+
+
+
 auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/register', methods=['GET', 'POST'])

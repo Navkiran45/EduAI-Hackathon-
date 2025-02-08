@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Page</title>
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <style>
+    /* Custom CSS */
+    body {
+      background: #ffffff; /* Changed to white */
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      background-color:#007bff!important; /* Changed to blue */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 10px 20px;
+    }
+
+    .navbar-brand img {
+      height: 50px;
+    }
+
+    .nav-link {
+      font-size: 18px;
+      color: #ffffff !important; /* Text color white */
+      transition: color 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: #cccccc !important;
+      text-decoration: none;
+    }
+
+    .profile-icon {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #0056b3;
+      font-weight: bold;
+      border: 2px solid #ffffff; /* White border */
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .profile-icon:hover {
+      background: #ffffff;
+      color: #0056b3;
+    }
+
+    .profile-container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .btn-update {
+      background: #007bff;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      width: 100%;
+      transition: background-color 0.3s;
+    }
+
+    .btn-update:hover {
+      background-color: #004494;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="./images/logo.eduai.png" alt="Edu.AI Logo" class="logo" style="width: 200px; height:200%; padding-left:90px;">
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Home</a>
+          </li>
+        </ul>
+        <div class="ms-3">
+          <div class="profile-icon">P</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Profile Section -->
+  <div class="profile-container">
+    <h2>Profile</h2>
+    <form>
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" placeholder="Enter your name" />
+      </div>
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          placeholder="Enter your username"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          placeholder="Enter your email"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="contact" class="form-label">Contact No.</label>
+        <input
+          type="tel"
+          class="form-control"
+          id="contact"
+          placeholder="Enter your contact number"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          placeholder="Enter your password"
+        />
+      </div>
+      <button type="button" class="btn btn-update">Update</button>
+    </form>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"
+  ></script>
+</body>
+</html>
