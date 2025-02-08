@@ -1,1 +1,13 @@
 <p> This os home page</p>
+<script>
+    async function evaluateCode() {
+        const code = document.getElementById('editor').value;
+        const response = await fetch('/chatbot/evaluate', {  // Updated route
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: code, objective: "Write a Python function to add two numbers." })
+        });
+        const data = await response.json();
+        document.getElementById('feedback').innerText = data.feedback;
+    }
+</script>
