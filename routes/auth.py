@@ -47,7 +47,7 @@ def login():
         student = Student.query.filter_by(username=username).first()
         if student and student.check_password(password):
             login_user(student)
-            return redirect(url_for('index'))
+            return render_template('index.html')
         
         flash('Invalid username or password')
     return render_template('login.html')
