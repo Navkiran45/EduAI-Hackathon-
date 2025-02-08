@@ -347,23 +347,24 @@ input {
                 <h2>Create your Account</h2>
                 <label>
                     <span>Name</span>
-                    <input type="text" />
+                    <input type="text"  name="name" required/>
                 </label>
                 <label>
                     <span>Username</span>
-                    <input type="text" />
+                    <input type="text"  name="Username" required />
                 </label>
                 <label>
                     <span>Email</span>
-                    <input type="email" />
+                    <input type="email"  name="Email" required/>
                 </label>
                 <label>
                     <span>Contact No.</span>
-                    <input type="text" />
+                    <input type="Conatct" />
                 </label>
                 <label>
                     <span>Password</span>
-                    <input type="password" />
+                    <input type="password" name="password" id="signup-password" required />
+                <p id="password-strength"></p> 
                 </label>
                
                 <button type="button" class="submit">Sign Up</button>
@@ -375,6 +376,22 @@ input {
     <script>
         document.querySelector('.img__btn').addEventListener('click', function() {
             document.querySelector('.cont').classList.toggle('s--signup');
+            document.getElementById('signup-password').addEventListener('input', function() {
+                let password = this.value;
+                let strengthText = document.getElementById('password-strength');
+        
+                if (password.length < 6) {
+                    strengthText.innerHTML = "Weak Password 😟";
+                    strengthText.style.color = "red";
+                } else if (password.match(/[0-9]/) && password.match(/[A-Z]/) && password.match(/[@!#*]/)) {
+                    strengthText.innerHTML = "Strong Password 💪";
+                    strengthText.style.color = "green";
+                } else {
+                    strengthText.innerHTML = "Moderate Password 😐";
+                    strengthText.style.color = "orange";
+                }
+            });
+            
         });
     </script>
  </body>
