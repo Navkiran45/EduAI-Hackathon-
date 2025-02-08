@@ -2,7 +2,9 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from config import Config
+
 import os
+
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -22,6 +24,7 @@ login_manager.init_app(app)
 
 # Import models after db initialization
 from models.student import Student
+
 
 
 @login_manager.user_loader
@@ -49,3 +52,6 @@ app.register_blueprint(code_bp)
 # Create tables within app context
 with app.app_context():
     db.create_all()
+
+if __name__ == '__main__':
+    app.run(debug=True)
