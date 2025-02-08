@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDUAI - Level Selection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: linear-gradient(45deg, #1a56db, #4f46e5);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+            opacity: 0;
+        }
+
+        .particle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            filter: blur(20px);
+            background: inherit;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(-50px) scale(1);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.7;
+            }
+
+            90% {
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: translateY(-20vh) translateX(50px) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        .lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .line {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, #1a56db, transparent);
+            height: 1px;
+            width: 100%;
+            animation: moveLine 8s infinite linear;
+            opacity: 0;
+        }
+
+        @keyframes moveLine {
+            0% {
+                transform: translateY(100vh) rotate(5deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.3;
+            }
+
+            90% {
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: translateY(-20vh) rotate(5deg);
+                opacity: 0;
+            }
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .brand {
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #60a5fa, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(45deg, #60a5fa, #818cf8);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-btn:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .level-options {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 4rem 5%;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .level-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            width: 300px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .level-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #60a5fa, #818cf8);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .level-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .level-card:hover::before {
+            opacity: 0.2;
+        }
+
+        .level-card h3 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .level-card p {
+            color: #cbd5e1;
+            line-height: 1.6;
+            transition: color 0.3s ease;
+        }
+
+        .test-level-container {
+            text-align: center;
+            padding: 2rem 0 4rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .test-level-btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(45deg, #60a5fa, #818cf8);
+            border: none;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(96, 165, 250, 0.3);
+        }
+
+        .test-level-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 60%);
+            transform: scale(0);
+            transition: transform 0.5s ease;
+        }
+
+        .test-level-btn:hover::before {
+            transform: scale(1);
+        }
+
+        .test-level-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(96, 165, 250, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .level-options {
+                padding: 2rem 1rem;
+            }
+
+            .level-card {
+                width: 100%;
+            }
+
+            .test-level-btn {
+                font-size: 1rem;
+                padding: 0.8rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="particles" id="particles"></div>
+    <div class="lines" id="lines"></div>
+
+    <nav class="navbar">
+        <div class="logo-container">
+            <img src="https://via.placeholder.com/40" alt="EDUAI Logo" class="logo">
+            <span class="brand">EDUAI</span>
+        </div>
+        <div class="nav-buttons">
+            <a href="#home" class="nav-btn">Home</a>
+            <a href="#profile" class="nav-btn">Update Profile</a>
+        </div>
+    </nav>
+
+    <section class="level-options">
+        <div class="level-card" onclick="selectLevel('Beginner')">
+            <h3>Beginner</h3>
+            <p>Start with the basics and build a strong foundation.</p>
+        </div>
+        <div class="level-card" onclick="selectLevel('Intermediate')">
+            <h3>Intermediate</h3>
+            <p>Enhance your skills with more complex topics.</p>
+        </div>
+        <div class="level-card" onclick="selectLevel('Advanced')">
+            <h3>Advanced</h3>
+            <p>Master the subject with advanced concepts and projects.</p>
+        </div>
+    </section>
+
+    <div class="test-level-container">
+        <button class="test-level-btn" onclick="testLevel()">
+            Wanna test your level?
+        </button>
+    </div>
+
+    <script>
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const linesContainer = document.getElementById('lines');
+
+            // Create particles
+            const particleCount = 30;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+
+                particle.style.left = Math.random() * 100 + 'vw';
+                const size = Math.random() * 15 + 5;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                particle.style.animationDelay = (Math.random() * 5) + 's';
+
+                particlesContainer.appendChild(particle);
+            }
+
+            // Create floating lines
+            const lineCount = 15;
+            for (let i = 0; i < lineCount; i++) {
+                const line = document.createElement('div');
+                line.className = 'line';
+
+                line.style.left = Math.random() * 100 + 'vw';
+                line.style.animationDuration = (Math.random() * 8 + 5) + 's';
+                line.style.animationDelay = (Math.random() * 5) + 's';
+
+                linesContainer.appendChild(line);
+            }
+        }
+
+        window.addEventListener('load', createParticles);
+
+        function selectLevel(level) {
+            alert(You have selected: ${ level });
+        }
+
+        function testLevel() {
+            alert("Starting level assessment...");
+        }
+    </script>
+</body>
+
+</html>

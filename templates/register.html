@@ -1,9 +1,9 @@
 <!DOCTYPE html>
- <html lang="en">
- <head>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>EduAI - Register</title>
     <link rel="stylesheet" href="/static/signinup.css">
     <style>
         *,
@@ -302,38 +302,75 @@ input {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
 }
+
+.flash-messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+.flash-message {
+    background: #2563eb;
+    color: white;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: slideIn 0.3s ease-out;
+}
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
     </style>
- </head>
- <body>
+</head>
+<body>
     <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="#"><img src="./images/logo.eduai.png" alt="Edu.AI Logo" class="logo" style="width: 200px; height:200%; padding-left:90px;"></a>
-           </div>
+            <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='images/logo.eduai.png') }}" alt="Edu.AI Logo" class="logo" style="width: 200px; height:200%; padding-left:90px;"></a>
+        </div>
     </nav>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     <div class="cont">
         <div class="form sign-in">
-            <h2>Welcome</h2>
-            <label>
-                <span>Email</span>
-                <input type="email" />
-            </label>
-            <label>
-                <span>Password</span>
-                <input type="password" />
-            </label>
-            <p class="forgot-pass">Forgot password?</p>
-            <button type="button" class="submit">Sign In</button>
-         
+            <h2>Welcome Back</h2>
+            <form action="{{ url_for('auth.login') }}" method="POST">
+                <label>
+                    <span>Username</span>
+                    <input type="text" name="username" required />
+                </label>
+                <label>
+                    <span>Password</span>
+                    <input type="password" name="password" required />
+                </label>
+                <p class="forgot-pass">Forgot password?</p>
+                <button type="submit" class="submit">Sign In</button>
+            </form>
         </div>
+
         <div class="sub-cont">
             <div class="img">
                 <div class="img__text m--up">
-                 
-                    <h3>Don't have an account? Please Sign up!<h3>
+                    <h3>Don't have an account? Please Sign up!</h3>
                 </div>
                 <div class="img__text m--in">
-                
-                    <h3>If you already has an account, just sign in.<h3>
+                    <h3>If you already have an account, Sign in!</h3>
                 </div>
                 <div class="img__btn">
                     <span class="m--up">Sign Up</span>
@@ -341,34 +378,32 @@ input {
                 </div>
             </div>
 
-
-            
             <div class="form sign-up">
                 <h2>Create your Account</h2>
-                <label>
-                    <span>Name</span>
-                    <input type="text"  name="name" required/>
-                </label>
-                <label>
-                    <span>Username</span>
-                    <input type="text"  name="Username" required />
-                </label>
-                <label>
-                    <span>Email</span>
-                    <input type="email"  name="Email" required/>
-                </label>
-                <label>
-                    <span>Contact No.</span>
-                    <input type="Conatct" />
-                </label>
-                <label>
-                    <span>Password</span>
-                    <input type="password" name="password" id="signup-password" required />
-                <p id="password-strength"></p> 
-                </label>
-               
-                <button type="button" class="submit">Sign Up</button>
-                
+                <form action="{{ url_for('auth.register') }}" method="POST">
+                    <label>
+                        <span>Name</span>
+                        <input type="text" name="name" required/>
+                    </label>
+                    <label>
+                        <span>Username</span>
+                        <input type="text" name="username" required />
+                    </label>
+                    <label>
+                        <span>Email</span>
+                        <input type="email" name="email" required/>
+                    </label>
+                    <label>
+                        <span>Contact No.</span>
+                        <input type="text" name="contact_number" required/>
+                    </label>
+                    <label>
+                        <span>Password</span>
+                        <input type="password" name="password" id="signup-password" required />
+                        <p id="password-strength"></p>
+                    </label>
+                    <button type="submit" class="submit">Sign Up</button>
+                </form>
             </div>
         </div>
     </div>
@@ -376,23 +411,33 @@ input {
     <script>
         document.querySelector('.img__btn').addEventListener('click', function() {
             document.querySelector('.cont').classList.toggle('s--signup');
-            document.getElementById('signup-password').addEventListener('input', function() {
-                let password = this.value;
-                let strengthText = document.getElementById('password-strength');
-        
-                if (password.length < 6) {
-                    strengthText.innerHTML = "Weak Password 😟";
-                    strengthText.style.color = "red";
-                } else if (password.match(/[0-9]/) && password.match(/[A-Z]/) && password.match(/[@!#*]/)) {
-                    strengthText.innerHTML = "Strong Password 💪";
-                    strengthText.style.color = "green";
-                } else {
-                    strengthText.innerHTML = "Moderate Password 😐";
-                    strengthText.style.color = "orange";
-                }
-            });
-            
         });
+
+        document.getElementById('signup-password').addEventListener('input', function() {
+            let password = this.value;
+            let strengthText = document.getElementById('password-strength');
+            
+            if (password.length < 6) {
+                strengthText.innerHTML = "Weak Password 😟";
+                strengthText.style.color = "red";
+            } else if (password.match(/[0-9]/) && password.match(/[A-Z]/) && password.match(/[@!#*]/)) {
+                strengthText.innerHTML = "Strong Password 💪";
+                strengthText.style.color = "green";
+            } else {
+                strengthText.innerHTML = "Moderate Password 😐";
+                strengthText.style.color = "orange";
+            }
+        });
+
+        // Auto-hide flash messages
+        setTimeout(() => {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(msg => {
+                msg.style.opacity = '0';
+                msg.style.transform = 'translateX(100%)';
+                setTimeout(() => msg.remove(), 300);
+            });
+        }, 5000);
     </script>
- </body>
- </html>
+</body>
+</html>

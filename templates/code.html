@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAI Code Editor</title>
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/cyberpunk.min.css">
+    <!-- CodeMirror JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+    <script defer src="{{ url_for('static', filename='js/code.js') }}"></script>
+    <style>
+        *,
+        *:before,
+        *:after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+        }
+
+        .navbar {
+            background: #fff;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            width: 200px;
+            height: auto;
+        }
+
+        .editor-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #1a1a1a;
+            border-radius: 20px;
+            box-shadow: -10px -10px 15px rgba(255,255,255,0.3),
+                        10px 10px 15px rgba(70,70,70,0.15),
+                        inset -10px -10px 15px rgba(255,255,255,0.3),
+                        inset 10px 10px 15px rgba(70,70,70,0.15);
+        }
+
+        .CodeMirror {
+            height: 500px;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 1rem;
+            border: 1px solid #1e40af;
+        }
+
+        .button-container {
+            margin: 1rem 0;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37,99,235,0.3);
+        }
+
+        .response-container {
+            background: #000;
+            color: #00ff00;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            border: 1px solid #1e40af;
+            font-family: 'Courier New', monospace;
+        }
+
+        h3 {
+            color: #2563eb;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        pre {
+            background: #1a1a1a;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid #2563eb;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            color: #00ff00;
+        }
+
+        #EduAI {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 400px;
+            height: 600px;
+            background: #1a1a1a;
+            border: 1px solid #1e40af;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(37,99,235,0.2);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        #chat-header {
+            background: #2563eb;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        #chat-body {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #000;
+            color: #00ff00;
+        }
+
+        #chat-input {
+            border: none;
+            padding: 1rem;
+            background: #1a1a1a;
+            color: #fff;
+            border-top: 1px solid #1e40af;
+            font-family: 'Courier New', monospace;
+        }
+
+        .user-message {
+            background: rgba(37,99,235,0.1);
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+            border-left: 3px solid #2563eb;
+        }
+
+        @media (max-width: 768px) {
+            .editor-container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+
+            #EduAI {
+                width: 100%;
+                height: 50vh;
+                right: 0;
+                bottom: 0;
+                border-radius: 20px 20px 0 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('base.home') }}">
+                <img src="{{ url_for('static', filename='images/logo.eduai.png') }}" alt="Edu.AI Logo" class="logo">
+            </a>
+        </div>
+    </nav>
+
+    <div class="editor-container">
+        <h3>Interactive Code Editor</h3>
+        <textarea id="code-editor"></textarea>
+        <div class="button-container">
+            <button onclick="sendToBackend()">Analyze Code</button>
+        </div>
+        <div class="response-container">
+            <h3>AI Analysis</h3>
+            <p id="serverResponse">Type or paste your code above and click "Analyze Code" to get started...</p>
+        </div>
+    </div>
+
+    <div id="EduAI">
+        <div id="chat-header">EduAI Assistant</div>
+        <div id="chat-body"></div>
+        <input type="text" id="chat-input" placeholder="Ask me about your code..." onkeypress="if(event.key === 'Enter') sendMessage()">
+    </div>
+</body>
+</html>
