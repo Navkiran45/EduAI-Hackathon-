@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Programming Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/quiz.css') }}" />
+</head>
+
+<body>
+    <div class="container">
+        <h1>Programming Quiz - {{ quiz.language }}</h1>
+
+        <form id="quizForm" method="POST" action="{{ url_for('quiz.submit_quiz') }}">
+            <input type="hidden" name="language" value="{{ quiz.language }}" />
+
+            {% for question in quiz.quiz %}
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="question-number">Question {{ loop.index }}</span>
+                    <span class="points">{{ question.points }} points</span>
+                </div>
+
+                <p class="question-text">{{ question.question }}</p>
+
+                {% set outer_loop = loop %}
+                <div class="options">
+                    {% for option in question.options %}
+                    <div class="option">
+                        <input type="radio" name="question{{ outer_loop.index }}"
+                            id="q{{ outer_loop.index }}o{{ loop.index }}" value="{{ loop.index }}" required />
+                        <label for="q{{ outer_loop.index }}o{{ loop.index }}">{{ option }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Hidden fields for question data -->
+                <input type="hidden" name="correct_{{ loop.index }}" value="{{ question.correct_option }}" />
+                <input type="hidden" name="points_{{ loop.index }}" value="{{ question.points }}" />
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="submit-btn">Submit Quiz</button>
+        </form>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+
+    <script>
+        document.getElementById('quizForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            let totalPoints = 0;
+            let maxPoints = 0;
+            const questionCount = {{ quiz.quiz.length }};
+
+        // Calculate score
+        for (let i = 1; i <= questionCount; i++) {
+            const selectedAnswer = document.querySelector(`input[name="question${i}"]:checked`);
+            const correctAnswer = document.querySelector(`input[name="correct_${i}"]`).value;
+            const points = parseInt(document.querySelector(`input[name="points_${i}"]`).value);
+
+            maxPoints += points;
+            if (selectedAnswer && selectedAnswer.value === correctAnswer) {
+                totalPoints += points;
+            }
+        }
+
+        const scorePercentage = (totalPoints / maxPoints) * 100;
+
+        // Add score to form
+        const scoreInput = document.createElement('input');
+        scoreInput.type = 'hidden';
+        scoreInput.name = 'score_percentage';
+        scoreInput.value = scorePercentage;
+
+        const totalPointsInput = document.createElement('input');
+        totalPointsInput.type = 'hidden';
+        totalPointsInput.name = 'total_points';
+        totalPointsInput.value = totalPoints;
+
+        const maxPointsInput = document.createElement('input');
+        maxPointsInput.type = 'hidden';
+        maxPointsInput.name = 'max_points';
+        maxPointsInput.value = maxPoints;
+
+        this.appendChild(scoreInput);
+        this.appendChild(totalPointsInput);
+        this.appendChild(maxPointsInput);
+
+        // Submit the form
+        this.submit();
+            });
+    </script>
+</body>
+
+</html>
