@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    
- </head>
- <body>
+    <link rel="stylesheet" href="/static/signinup.css">
     <style>
         *,
 *:before,
@@ -36,7 +34,6 @@ button {
 }
 
 .cont {
-    margin-top:30px;
     border-radius: 20px;
     overflow: hidden;
     position: relative;
@@ -168,7 +165,6 @@ button {
 .cont.s--signup .img__text.m--in {
     -webkit-transform: translateX(0);
     transform: translateX(0);
-    padding-bottom: 70px;
 }
 
 .img__btn {
@@ -307,9 +303,11 @@ input {
     transform: translate3d(0, 0, 0);
 }
     </style>
+ </head>
+ <body>
     <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="#"><img src="" alt="Edu.AI Logo" class="logo" style="width: 100px; height:100%; padding-left:90px; margin-top:50px;"></a>
+            <a class="navbar-brand" href="#"><img src="./images/logo.eduai.png" alt="Edu.AI Logo" class="logo" style="width: 200px; height:200%; padding-left:90px;"></a>
            </div>
     </nav>
     <div class="cont">
@@ -352,13 +350,22 @@ input {
                     <input type="text" />
                 </label>
                 <label>
+                    <span>Username</span>
+                    <input type="text" />
+                </label>
+                <label>
                     <span>Email</span>
                     <input type="email" />
+                </label>
+                <label>
+                    <span>Contact No.</span>
+                    <input type="text" />
                 </label>
                 <label>
                     <span>Password</span>
                     <input type="password" />
                 </label>
+               
                 <button type="button" class="submit">Sign Up</button>
                 
             </div>
