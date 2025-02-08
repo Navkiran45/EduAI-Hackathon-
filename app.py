@@ -4,7 +4,6 @@ from flask_login import LoginManager
 from config import Config
 import os
 
-
 db = SQLAlchemy()
 login_manager = LoginManager()
 
@@ -34,9 +33,12 @@ login_manager.login_view = "auth.login"
 
 # Register blueprints
 from routes.auth import auth_bp
+from routes.update import update_bp
+from routes.quiz import quiz_bp
 
 app.register_blueprint(auth_bp)
-
+app.register_blueprint(update_bp)
+app.register_blueprint(quiz_bp)
 # Create tables within app context
 with app.app_context():
     db.create_all()
