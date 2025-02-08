@@ -36,11 +36,14 @@ from routes.auth import auth_bp
 from routes.homepage import base_bp
 from routes.update import update_bp
 from routes.quiz import quiz_bp
+from routes.chapters import chapters_bp
 
 app.register_blueprint(base_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(update_bp)
 app.register_blueprint(quiz_bp, url_prefix="/quiz")
+app.register_blueprint(chapters_bp)
+
 # Create tables within app context
 with app.app_context():
     db.create_all()
