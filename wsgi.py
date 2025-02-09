@@ -9,7 +9,7 @@ if project_home not in sys.path:
 # Set environment variables
 os.environ['FLASK_ENV'] = 'production'
 os.environ['SECRET_KEY'] = 'your-production-secret-key'  # Change this to a secure value
-os.environ['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@username.mysql.pythonanywhere-services.com/username$dbname'  # You'll update this with your actual database URL
+os.environ['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(project_home, 'instance', 'eduai.db')
 
 # Import your Flask app
 from app import app as application 
