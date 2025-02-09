@@ -14,7 +14,6 @@
         }
         .header {
             background: #1e40af;
-
             padding: 10px 20px;
             display: flex;
             justify-content: space-between;
@@ -29,7 +28,6 @@
             width: 40%;
         }
         .header .profile-icon {
-           
             font-size: 40px;
             cursor: pointer;
         }
@@ -49,8 +47,7 @@
             cursor: pointer;
             transition: 0.3s;
             border-radius: 30px;
-            
-             
+            text-decoration: none;
         }
         .language-box:nth-child(1) { 
             background: linear-gradient(135deg, #1e40afce, silver); 
@@ -66,7 +63,7 @@
             margin-top: 10px;
             margin-left: 50px;
             margin-top: 30px;
-         }
+        }
         .language-box:nth-child(3) { 
             margin-bottom: 60px;
             margin-right: 80px;
@@ -81,35 +78,34 @@
         }
         .language-box:hover {
             opacity: 0.8;
+            color: white;
+            text-decoration: none;
         }
-         
     </style>
 </head>
 <body>
-
     <!-- Header Section -->
     <header class="header">
         <div class="container">
-            <a class="navbar-brand" href="#"><img src="./images/logo.eduai.png" alt="Edu.AI Logo" class="logo" style="width: 100px; height:100%;"></a>
-           </div>
-        <input type="text" class="form-control search-bar" placeholder="Search...">
-        <div class="profile-icon">👤</div>
+            <a class="navbar-brand" href="{{ url_for('base.home') }}">
+                <img src="{{ url_for('static', filename='images/logo.eduai.png') }}" alt="Edu.AI Logo" class="logo" style="width: 100px; height:100%;">
+            </a>
+            {% if current_user.is_authenticated %}
+            <div class="ms-auto">
+                <a href="{{ url_for('auth.profile') }}" class="btn btn-outline-light me-2">Profile</a>
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-light">Logout</a>
+            </div>
+            {% endif %}
+        </div>
     </header>
 
     <!-- Language Selection Section -->
     <div class="language-container">
-        <a href="/quiz/cpp" class="language-box">C++</a>
-        <a href="/quiz/python" class="language-box">Python</a>
-        <a href="/quiz/javascript" class="language-box">Javascript</a>
-        <a href="/quiz/machine-learning" class="language-box">Machine Learning</a>
+        <a href="{{ url_for('base.level', language='cpp') }}" class="language-box">C++</a>
+        <a href="{{ url_for('base.level', language='python') }}" class="language-box">Python</a>
+        <a href="{{ url_for('base.level', language='javascript') }}" class="language-box">Javascript</a>
+        <a href="{{ url_for('base.level', language='java') }}" class="language-box">Java</a>
     </div>
-
-    <!-- JavaScript for Selection -->
-    <script>
-        function selectLanguage(language) {
-            alert("You selected " + language);
-        }
-    </script>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

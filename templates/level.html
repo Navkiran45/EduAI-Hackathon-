@@ -275,6 +275,8 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(96, 165, 250, 0.3);
+            text-decoration: none;
+            display: inline-block;
         }
 
         .test-level-btn::before {
@@ -296,6 +298,8 @@
         .test-level-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(96, 165, 250, 0.4);
+            color: white;
+            text-decoration: none;
         }
 
         @media (max-width: 768px) {
@@ -325,35 +329,38 @@
 
     <nav class="navbar">
         <div class="logo-container">
-            <img src="https://via.placeholder.com/40" alt="EDUAI Logo" class="logo">
-            <span class="brand">EDUAI</span>
+            <a href="{{ url_for('base.home') }}">
+                <img src="{{ url_for('static', filename='images/logo.eduai.png') }}" alt="EDUAI Logo" class="logo">
+                <span class="brand">EDUAI</span>
+            </a>
         </div>
         <div class="nav-buttons">
-            <a href="#home" class="nav-btn">Home</a>
-            <a href="#profile" class="nav-btn">Update Profile</a>
+            <a href="{{ url_for('base.home') }}" class="nav-btn">Home</a>
+            <a href="{{ url_for('auth.profile') }}" class="nav-btn">Profile</a>
         </div>
     </nav>
 
     <section class="level-options">
-        <div class="level-card" onclick="selectLevel('Beginner')">
+        <div class="level-card" onclick="window.location.href='{{ url_for('chapters.show_roadmap', language=language, level='beginner') }}'">
             <h3>Beginner</h3>
             <p>Start with the basics and build a strong foundation.</p>
         </div>
-        <div class="level-card" onclick="selectLevel('Intermediate')">
+        <div class="level-card" onclick="window.location.href='{{ url_for('chapters.show_roadmap', language=language, level='intermediate') }}'">
             <h3>Intermediate</h3>
             <p>Enhance your skills with more complex topics.</p>
         </div>
-        <div class="level-card" onclick="selectLevel('Advanced')">
+        <div class="level-card" onclick="window.location.href='{{ url_for('chapters.show_roadmap', language=language, level='advanced') }}'">
             <h3>Advanced</h3>
             <p>Master the subject with advanced concepts and projects.</p>
         </div>
     </section>
 
     <div class="test-level-container">
-        <button class="test-level-btn" onclick="testLevel()">
+        <a href="{{ url_for('quiz.render_quiz', lang=language) }}" class="test-level-btn">
             Wanna test your level?
-        </button>
+        </a>
     </div>
+
 
     <script>
         function createParticles() {
@@ -391,14 +398,6 @@
         }
 
         window.addEventListener('load', createParticles);
-
-        function selectLevel(level) {
-            alert(You have selected: ${ level });
-        }
-
-        function testLevel() {
-            alert("Starting level assessment...");
-        }
     </script>
 </body>
 

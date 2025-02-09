@@ -1,12 +1,12 @@
 from flask import Blueprint, render_template, jsonify, request, flash, redirect, url_for
 from flask_login import login_required, current_user
-from models.chapter import Chapter, ChapterObjective
+from models.chapter import Chapter, ChapterObjective, ObjectiveProgress
 from app import db
 
 chapters_bp = Blueprint('chapters', __name__)
 
 @chapters_bp.route('/roadmap/<string:language>/<string:level>')
-# @login_required
+@login_required
 def show_roadmap(language, level):
     chapters = Chapter.query.filter_by(
         language=language,
@@ -19,12 +19,26 @@ def show_roadmap(language, level):
                          level=level)
 
 @chapters_bp.route('/chapter/<int:chapter_id>')
-# @login_required
+@login_required
 def chapter_detail(chapter_id):
     chapter = Chapter.query.get_or_404(chapter_id)
+    
+    # Get objectives with their progress
     objectives = ChapterObjective.query.filter_by(
         chapter_id=chapter_id
     ).order_by(ChapterObjective.order).all()
+    
+    # Add progress state to each objective
+    for objective in objectives:
+        # Use progress_state instead of progress to avoid conflict with relationship
+        if current_user.is_authenticated:
+            progress_record = ObjectiveProgress.query.filter_by(
+                student_id=current_user.id,
+                objective_id=objective.id
+            ).first()
+            setattr(objective, 'progress_state', progress_record)
+        else:
+            setattr(objective, 'progress_state', None)
     
     return render_template('chapter_detail.html', 
                          chapter=chapter, 

@@ -7,6 +7,11 @@ from werkzeug.security import generate_password_hash
 
 auth_bp = Blueprint('auth', __name__)
 
+@auth_bp.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html', user=current_user)
+
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -22,22 +27,21 @@ def register():
         # Validate required fields
         if not all([name, username, email, contact_number, password]):
             flash('All fields are required')
-            return redirect(url_for('auth.register'))
-        return render_template('homepage.html')
+            return render_template('register.html')
 
         # Validate password strength
         if len(password) < 6:
             flash('Password must be at least 6 characters long')
-            return redirect(url_for('auth.register'))
+            return render_template('register.html')
 
         # Check if username or email already exists
         if Student.query.filter_by(username=username).first():
             flash('Username already exists')
-            return redirect(url_for('auth.register'))
+            return render_template('register.html')
 
         if Student.query.filter_by(email=email).first():
             flash('Email already registered')
-            return redirect(url_for('auth.register'))
+            return render_template('register.html')
 
         try:
             # Create new student
@@ -61,7 +65,7 @@ def register():
         except Exception as e:
             db.session.rollback()
             flash('An error occurred during registration. Please try again.')
-            return redirect(url_for('auth.register'))
+            return render_template('register.html')
 
     return render_template('register.html')
 
@@ -76,7 +80,7 @@ def login():
         
         if not username or not password:
             flash('Please provide both username and password')
-            return redirect(url_for('auth.login'))
+            return render_template('register.html')
 
         student = Student.query.filter_by(username=username).first()
         
@@ -89,7 +93,7 @@ def login():
             return redirect(url_for('base.home'))
         
         flash('Invalid username or password')
-        return redirect(url_for('auth.register'))
+        return render_template('register.html')
 
     return render_template('register.html')
 
@@ -98,4 +102,4 @@ def login():
 def logout():
     logout_user()
     flash('You have been logged out successfully')
-    return redirect(url_for('auth.register'))
+    return redirect(url_for('base.home'))

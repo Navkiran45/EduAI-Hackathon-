@@ -8,6 +8,6 @@ base_bp = Blueprint('base', __name__)
 @base_bp.route('/')
 def base():
     return render_template('base.html')
-@base_bp.route('/homepage')
+@base_bp.route('/home')
 def home():
-    return render_template('homepage.html')
+    return render_template('home.html')

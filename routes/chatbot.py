@@ -1,7 +1,8 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template, flash
 import os
 import openai
 from dotenv import load_dotenv
+from flask_login import login_required
 
 # Load environment variables
 load_dotenv()
@@ -15,36 +16,82 @@ client = openai.OpenAI(
 # Create a Blueprint for the chatbot
 chatbot_bp = Blueprint('chatbot', __name__)
 
-# Route to evaluate code
+@chatbot_bp.route('/chat')
+@login_required
+def render_chat():
+    return render_template('chatbot.html')
+
 @chatbot_bp.route('/evaluate', methods=['POST'])
+@login_required
 def evaluate_code():
-    user_code = request.json.get('code')  # Get the code from the frontend
-    objective = request.json.get('objective')  # Get the objective (if any)
+    try:
+        data = request.json
+        user_code = data.get('code', '')
+        message = data.get('message', '')
+        language = data.get('language', '')
+        objective = data.get('objective', '')
 
-    # Custom prompt to evaluate the code
-    prompt = f"""
-    You are an AI tutor. A user has submitted the following code for the objective: {objective}.
-    Code:
-    {user_code}
+        if objective == 'analyze':
+            prompt = f"""
+            Analyze this {language} code and provide:
+            1. A brief explanation of what the code does
+            2. Any potential issues or improvements
+            3. Best practices that could be applied
 
-    Your task is to:
-    1. Check if the code is correct.
-    2. If the code is incorrect, provide suggestions to fix it without giving the complete solution.
-    3. If the code is correct, acknowledge it and provide feedback.
+            Code:
+            ```{language}
+            {user_code}
+            ```
+            """
+        elif objective == 'explain':
+            prompt = f"""
+            Explain this {language} code in detail:
+            1. Break down each part of the code
+            2. Explain the logic and flow
+            3. Highlight any important concepts used
 
-    Respond in a concise and helpful manner.
-    """
+            Code:
+            ```{language}
+            {user_code}
+            ```
+            """
+        else:
+            # Handle general chat messages
+            prompt = f"""
+            User Message: {message}
 
-    # Call Groq API
-    response = client.chat.completions.create(
-        model="mixtral-8x7b-32768",  # Use the appropriate Groq model
-        messages=[
-            {"role": "system", "content": "You are a helpful AI tutor."},
-            {"role": "user", "content": prompt}
-        ]
-    )
+            Context:
+            - Programming Language: {language if language else 'Not specified'}
+            - Code (if provided):
+            ```
+            {user_code if user_code else 'No code provided'}
+            ```
 
-    # Extract the AI's response
-    feedback = response.choices[0].message.content
+            Provide a helpful response addressing the user's question or request.
+            If code is provided, reference it in your response when relevant.
+            """
 
-    return jsonify({"feedback": feedback})
+        # Call Groq API
+        response = client.chat.completions.create(
+            model="mixtral-8x7b-32768",
+            messages=[
+                {"role": "system", "content": "You are a helpful AI programming tutor. Provide clear, concise, and accurate responses."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7
+        )
+
+        # Extract the AI's response
+        feedback = response.choices[0].message.content
+
+        return jsonify({
+            "success": True,
+            "response": feedback,
+            "feedback": feedback  # For backward compatibility
+        })
+
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
